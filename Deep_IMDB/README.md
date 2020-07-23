@@ -10,5 +10,5 @@ Experiment on few DL models (pre-trained and regular) on the IMDB dataset
 | `nnlm-en-dim128/1` | 0.3724 | 0.8531 | 0.2 | 124,659,329 |
 | `universal-sentence-encoder/4` | 0.3280 | 0.8922 |0.2 | 257,060,993 |
 | `bert-base-uncased` | 0.1725 | 0.9346 | 0.5 | 109,483,778 |
-| `xlnet-base-cased` | 0.1590  | 0.0.9439 | 0.5 | 117,310,466 |
+| `xlnet-base-cased` | 0.1590  | 0.9439 | 0.5 | 117,310,466 |
 
