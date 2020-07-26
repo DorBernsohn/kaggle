@@ -1,4 +1,4 @@
- # * @author  Dor Bernsohn
+ # @author  DBernsohn
 
 import transformers
 from tqdm import tqdm

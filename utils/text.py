@@ -1,9 +1,8 @@
- * @author  Dor Bernsohn
+ # @author  DBernsohn
 
 import re
 import emoji
 import string
-from tqdm import tqdm
 
 def clean_text(text, remove_emojis=True, remove_numbers=True, remove_punc=True, remove_url=True, remove_spaces=True):
         """Clean the text
