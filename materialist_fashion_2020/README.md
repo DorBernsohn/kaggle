@@ -2,6 +2,10 @@
 
 Implementation of Mask-RCNN on the iMaterialist (Fashion) 2020 dataset 
 
-Mask R-CNN explained           |  Dataset description
-:-------------------------:|:-------------------------:
-![](mask_rcnn_explained.jpeg)  |  ![](dataset_example.jpg)
+Mask R-CNN explained           
+:-------------------------:
+![](mask_rcnn_explained.jpeg)  
+
+Dataset description
+![](dataset_example.jpg)
+:-------------------------:
