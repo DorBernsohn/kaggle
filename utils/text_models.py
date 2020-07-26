@@ -21,16 +21,15 @@ def create_tfds_dataset(texts, lables):
     ds = tf.data.Dataset.from_tensor_slices((texts, texts))
     return ds
 
-class BERTModel():
-    """create a BERT inputs and build a model
+class BertInputs():
+    """create a BERT inputs
     """        
-    def __init__(self, ds_train, ds_test, max_length=512, batch_size=6, learning_rate = 2e-5):
+    def __init__(self, texts, lables, max_length=512, batch_size=6, bert_model_name='bert-base-uncased'):
         self.max_length = max_length
         self.batch_size = batch_size
-        self.learning_rate = learning_rate
-        self.tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
-        self.ds_train = ds_train
-        self.ds_test = ds_test
+        self.tokenizer = BertTokenizer.from_pretrained(bert_model_name, do_lower_case=True)
+        self.texts = texts
+        self.lables = lables
         
     def convert_example_to_feature(self, text):
         """combine step for tokenization, WordPiece vector mapping, adding special tokens as well as truncating reviews longer than the max length
@@ -47,10 +46,11 @@ class BERTModel():
                         max_length = self.max_length, # max length of the text that can go to BERT
                         pad_to_max_length = True, # add [PAD] tokens
                         return_attention_mask = True, # add attention mask to not focus on pad tokens
+                        return_token_type_ids = True,
                         truncation=True
                     )
-    
-    def map_example_to_dict(self, input_ids, attention_masks, token_type_ids, label):
+    @staticmethod
+    def map_example_to_dict(input_ids, attention_masks, token_type_ids, label):
         """map to the expected input to TFBertForSequenceClassification
 
         Args:
@@ -68,11 +68,12 @@ class BERTModel():
             "attention_mask": attention_masks,
         }, label
 
-    def encode_examples(self, ds, limit=-1):
+    def encode_examples(self, texts, lables, limit=-1):
         """prepare list, so that we can build up final TensorFlow dataset from slices
 
         Args:
-            ds (tensorflow dataset): a tensorflow dataset of text and lables
+            texts (list): list of texts
+            lables (list): list of lables
             limit (int, optional): how many samples to take. Defaults to 10.
 
         Returns:
@@ -83,13 +84,10 @@ class BERTModel():
         token_type_ids_list = []
         attention_mask_list = []
         label_list = []
-
-        if (limit > 0):
-            ds = ds.take(limit)
             
-        for review, label in tqdm(tfds.as_numpy(ds)):
+        for text, label in tqdm(zip(texts, lables)):
 
-            bert_input = self.convert_example_to_feature(review.decode())
+            bert_input = self.convert_example_to_feature(text)
         
             input_ids_list.append(bert_input['input_ids'])
             token_type_ids_list.append(bert_input['token_type_ids'])
@@ -98,55 +96,28 @@ class BERTModel():
 
         return tf.data.Dataset.from_tensor_slices((input_ids_list, attention_mask_list, token_type_ids_list, label_list)).map(self.map_example_to_dict)
     
-    def process_examples(self):
+    def process_examples(self, train=None):
         """encode the dataset
-        """        
-        self.ds_train_encoded = self.encode_examples(self.ds_train).shuffle(10000).batch(self.batch_size)
-
-        self.ds_test_encoded = self.encode_examples(self.ds_test).batch(self.batch_size)
-
-    @staticmethod
-    def build_model(learning_rate, epsilon=1e-08):
-        """build the BERT model
-
-        Args:
-            learning_rate (float): the learning rate for the Adam optimizer
-            epsilon (float, optional): the epsilon for the Adam optimizer. Defaults to 1e-08.
 
         Returns:
-            tensorflow model object: the model object
+            tensorflow dataset objext: the text encode to BERT inputs as a tensorflow object
         """        
-        model = TFBertForSequenceClassification.from_pretrained('bert-base-uncased')
-        optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate, epsilon=epsilon)
-        loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
-        model.compile(optimizer=optimizer, loss=loss, metrics=[metric])
-        print(model.summary())
-        return model
+        if train:
+            ds_train_encoded = self.encode_examples(self.texts, self.lables).shuffle(10000).batch(self.batch_size)
+            return ds_train_encoded
+        else:
+            ds_test_encoded = self.encode_examples(self.texts, self.lables).batch(self.batch_size)
+            return ds_test_encoded
 
-    def training(self, number_of_epochs):
-        model = self.build_model(learning_rate=self.learning_rate)
-        my_callbacks = [
-                        tf.keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=2, verbose=0, mode='min', baseline=None, restore_best_weights=True)
-        ]
-        bert_history = model.fit(
-                         self.ds_train_encoded, 
-                         validation_data=self.ds_test_encoded,
-                         epochs=number_of_epochs,
-                         callbacks=my_callbacks)
-
-        return bert_history
-
-class XLNetModel():
+class XLNetInputs():
     """create a XLNet inputs and build a model
     """        
-    def __init__(self, ds_train, ds_test, max_length=512, batch_size=6, learning_rate=2e-5):
+    def __init__(self, texts, lables, max_length=512, batch_size=6, xlnet_model_name='xlnet-base-cased'):
         self.max_length = max_length
         self.batch_size = batch_size
-        self.learning_rate = learning_rate
-        self.tokenizer = XLNetTokenizer.from_pretrained('xlnet-base-cased', do_lower_case=True)
-        self.ds_train = ds_train
-        self.ds_test = ds_test
+        self.tokenizer = XLNetTokenizer.from_pretrained(xlnet_model_name, do_lower_case=True)
+        self.texts = texts
+        self.lables = lables
         
     def convert_example_to_feature(self, text):
         """combine step for tokenization, WordPiece vector mapping, adding special tokens as well as truncating reviews longer than the max length
@@ -163,8 +134,8 @@ class XLNetModel():
                         pad_to_max_length = True, # add [PAD] tokens
                         truncation=True
                     )
-    
-    def map_example_to_dict(self, input_ids, attention_masks, token_type_ids, label):
+    @staticmethod
+    def map_example_to_dict(input_ids, attention_masks, label):
         """map to the expected input to TFXLNetForSequenceClassification
 
         Args:
@@ -181,11 +152,12 @@ class XLNetModel():
             "attention_mask": attention_masks,
         }, label
 
-    def encode_examples(self, ds, limit=-1):
+    def encode_examples(self, texts, lables, limit=-1):
         """prepare list, so that we can build up final TensorFlow dataset from slices
 
         Args:
-            ds (tensorflow dataset): a tensorflow dataset of text and lables
+            texts (list): list of texts
+            lables (list): list of lables
             limit (int, optional): how many samples to take. Defaults to 10.
 
         Returns:
@@ -199,7 +171,7 @@ class XLNetModel():
         if (limit > 0):
             ds = ds.take(limit)
             
-        for review, label in tqdm(tfds.as_numpy(ds)):
+        for review, label in tqdm(zip(texts, lables)):
 
             xlnet_input = self.convert_example_to_feature(review.decode())
         
@@ -209,41 +181,15 @@ class XLNetModel():
 
         return tf.data.Dataset.from_tensor_slices((input_ids_list, attention_mask_list, label_list)).map(self.map_example_to_dict)
     
-    def process_examples(self):
+    def process_examples(self, train=None):
         """encode the dataset
-        """        
-        self.ds_train_encoded = self.encode_examples(self.ds_train).shuffle(10000).batch(self.batch_size)
-
-        self.ds_test_encoded = self.encode_examples(self.ds_test).batch(self.batch_size)
-
-    @staticmethod
-    def build_model(learning_rate, epsilon=1e-08):
-        """build the XLNet model
-
-        Args:
-            learning_rate (float): the learning rate for the Adam optimizer
-            epsilon (float, optional): the epsilon for the Adam optimizer. Defaults to 1e-08.
 
         Returns:
-            tensorflow model object: the model object
+            tensorflow dataset objext: the text encode to BERT inputs as a tensorflow object
         """        
-        model = TFXLNetForSequenceClassification.from_pretrained('xlnet-base-cased')
-        optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate, epsilon=epsilon)
-        loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        metric = tf.keras.metrics.SparseCategoricalAccuracy('accuracy')
-        model.compile(optimizer=optimizer, loss=loss, metrics=[metric])
-        print(model.summary())
-        return model
-
-    def training(self, number_of_epochs):
-        model = self.build_model(learning_rate=self.learning_rate)
-        my_callbacks = [
-                        tf.keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0, patience=2, verbose=0, mode='min', baseline=None, restore_best_weights=True)
-        ]
-        xlnet_history = model.fit(
-                         self.ds_train_encoded, 
-                         validation_data=self.ds_test_encoded,
-                         epochs=number_of_epochs,
-                         callbacks=my_callbacks)
-            
-        return xlnet_history
+        if train:
+            ds_train_encoded = self.encode_examples(self.texts, self.lables).shuffle(10000).batch(self.batch_size)
+            return ds_train_encoded
+        else:
+            ds_test_encoded = self.encode_examples(self.texts, self.lables).batch(self.batch_size)
+            return ds_test_encoded
