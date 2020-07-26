@@ -167,9 +167,6 @@ class XLNetInputs():
         input_ids_list = []
         attention_mask_list = []
         label_list = []
-
-        if (limit > 0):
-            ds = ds.take(limit)
             
         for review, label in tqdm(zip(texts, lables)):
 
