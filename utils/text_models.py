@@ -3,7 +3,6 @@
 import transformers
 from tqdm import tqdm
 import tensorflow as tf
-import tensorflow_datasets as tfds
 
 from transformers import BertTokenizer, TFBertForSequenceClassification
 from transformers import TFXLNetModel, TFXLNetForSequenceClassification, XLNetTokenizer
