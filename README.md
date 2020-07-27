@@ -7,9 +7,3 @@ kaggle projects
 | `iMaterialist (Fashion) 2020 at FGVC7` | https://www.kaggle.com/c/imaterialist-fashion-2020-fgvc7 | imaterialist_fashion_2020 |
 | `Tweet Sentiment Extraction` | https://www.kaggle.com/c/tweet-sentiment-extraction | Tweet_Sentiment_Extraction |
 
-<details open>
-<summary>Want to ruin the surprise?</summary>
-<br>
-Well, you asked for it!
-</details>
-
