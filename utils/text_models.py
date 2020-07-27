@@ -7,19 +7,6 @@ import tensorflow as tf
 from transformers import BertTokenizer, TFBertForSequenceClassification
 from transformers import TFXLNetModel, TFXLNetForSequenceClassification, XLNetTokenizer
 
-def create_tfds_dataset(texts, lables):
-    """create tensorflow dataset
-
-    Args:
-        texts ([list]): [list of strings/pandas column]
-        lables ([list]): [list of strings/pandas column]
-
-    Returns:
-        [tfds]: [tensorflow dataset object]
-    """    
-    ds = tf.data.Dataset.from_tensor_slices((texts, texts))
-    return ds
-
 class BertInputs():
     """create a BERT inputs
     """        

@@ -40,3 +40,16 @@ def clean_text(text, remove_emojis=True, remove_numbers=True, remove_punc=True, 
             if remove_emojis:
                 text = ''.join(c for c in text if c not in emoji.UNICODE_EMOJI)
             return text
+
+def create_tfds_dataset(texts, lables):
+    """create tensorflow dataset
+
+    Args:
+        texts ([list]): [list of strings/pandas column]
+        lables ([list]): [list of strings/pandas column]
+
+    Returns:
+        [tfds]: [tensorflow dataset object]
+    """    
+    ds = tf.data.Dataset.from_tensor_slices((texts, texts))
+    return ds
