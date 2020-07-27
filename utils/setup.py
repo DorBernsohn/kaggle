@@ -1,6 +1,6 @@
  # @author  DBernsohn
- import tensorflow as tf
- 
+import tensorflow as tf
+
 def set_TPU():
     """config TPU for tensorflow
     """     
