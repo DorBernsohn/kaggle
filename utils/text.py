@@ -3,6 +3,7 @@
 import re
 import emoji
 import string
+from googletrans import Translator
 
 def clean_text(text, remove_emojis=True, remove_numbers=True, remove_punc=True, remove_url=True, remove_spaces=True):
         """Clean the text
@@ -53,3 +54,29 @@ def create_tfds_dataset(texts, lables):
     """    
     ds = tf.data.Dataset.from_tensor_slices((texts, texts))
     return ds
+
+def get_translation(text, dest_lang):
+    """translate text using google API
+
+    Args:
+        text (string/list): string or list of strings
+        dest_lang (satring): string that describe the desired language
+
+    Raises:
+        ValueError: error if the input is not string or list
+
+    Returns:
+        string\list: string or list of string of the translation
+    """    
+    translator = Translator()
+    if isinstance(text, list):
+        translation = translator.translate(text, dest=dest_lang)
+        translation_list = []
+        for item in  translation:
+            translation_list.append(item.text)
+        return translation_list
+    elif isinstance(text, str):
+        translation = translator.translate(text, dest=dest_lang)
+        return translation.text
+    else:
+        raise ValueError(f"{type(text)} provided, supporting string or list")
