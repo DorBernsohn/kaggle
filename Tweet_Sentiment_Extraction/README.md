@@ -6,3 +6,12 @@ Experiment on few DL models (pre-trained and regular) on the Tweet Sentiment Ext
 | --- | --- | --- | --- | --- |
 |  |  |  |  |  |
 
+<details>
+<summary>Table of content</summary>
+
++ Imports
++ Load the data
++ Preprocess
++ 
+    + 
+</details>

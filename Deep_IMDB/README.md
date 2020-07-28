@@ -12,3 +12,14 @@ Experiment on few DL models (pre-trained and regular) on the IMDB dataset
 | `bert-base-uncased` | 0.1725 | 0.9346 | 0.5 | 109,483,778 |
 | `xlnet-base-cased` | 0.1590  | 0.9439 | 0.5 | 117,310,466 |
 
+<details>
+<summary>Table of content</summary>
+
++ Imports and load the data
++ Preprocess
++ Modelling
+    + BiLSTMs + Attention (learned embeddings)
+    + Pretrained embeddings
+    + Fine tunning BERT
+    + Fine tunning XLNet
+</details>
