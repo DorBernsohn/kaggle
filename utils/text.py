@@ -56,7 +56,7 @@ def create_tfds_dataset(texts, lables):
     return ds
 
 def get_translation(text, dest_lang):
-    """translate text using google API
+    """translate text using google API, for all the language list visit: https://py-googletrans.readthedocs.io/en/latest/
 
     Args:
         text (string/list): string or list of strings
@@ -79,4 +79,4 @@ def get_translation(text, dest_lang):
         translation = translator.translate(text, dest=dest_lang)
         return translation.text
     else:
-        raise ValueError(f"{type(text)} provided, supporting string or list")
+        raise ValueError(f"{type(text)} provided, supporting types: {str} or {list}")
