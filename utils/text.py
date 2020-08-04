@@ -3,6 +3,7 @@
 import re
 import emoji
 import string
+from nltk.corpus import wordnet
 from googletrans import Translator
 
 def clean_text(text, remove_emojis=True, remove_numbers=True, remove_punc=True, remove_url=True, remove_spaces=True):
@@ -80,3 +81,11 @@ def get_translation(text, dest_lang):
         return translation.text
     else:
         raise ValueError(f"{type(text)} provided, supporting types: {str} or {list}")
+
+def get_synonym(text):
+  synonyms = []
+  for syn in wordnet.synsets(text):
+      for lm in syn.lemmas():
+              if lm.name().lower() != text:
+                synonyms.append(lm.name().lower())
+  return synonyms
