@@ -1,6 +1,7 @@
  # @author  DBernsohn
 
 import re
+import nltk
 import emoji
 import string
 import warnings
@@ -68,8 +69,11 @@ def create_tfds_dataset(texts, lables):
 
 class textAugmentation():
     def __init__(self, gensim_model='glove-twitter-25'):
+        print(f"Downloading {gensim_model} model from gensim")
         self.gensim_model = api.load(gensim_model)
         self.transformers_nlp = pipeline('fill-mask')
+        print(f"Downloading wordnet from nltk")
+        nltk.download("wordnet")
 
     def get_most_similar(self, word, topn=5):
         """get most similar words
@@ -81,7 +85,11 @@ class textAugmentation():
         Returns:
             list: list of tuple (word, score)
         """        
-        return self.gensim_model.most_similar(word, topn=topn)
+        try:
+            return self.gensim_model.most_similar(word, topn=topn)
+        except:
+            print(f"word {word} not in vocabulary")
+            return []
 
         """return mask language model output (for example 'This is <mask> cool' -> 'This is pretty cool')
 
