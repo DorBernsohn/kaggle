@@ -115,24 +115,33 @@ class textAugmentation():
                         synonyms.append(lm.name().lower())
         return synonyms
     
-    def get_translation(self, text, dest_lang):
+    def get_translation(self, text, dest_lang, circle=False, orig_lang=None):
         """translate text using google API, for all the language list visit: https://py-googletrans.readthedocs.io/en/latest/
 
         Args:
             text (list): list of strings
             dest_lang (satring): string that describe the desired language
+            circle (bool, optional): whether to to circle translation (en -> fr -> en). Defaults to False.
+            orig_lang ([type], optional): the original language of the text (circle=True). Defaults to None.       
 
         Raises:
-            ValueError: error if the input is not string or list
+            ValueError: error if the input is not a list
 
         Returns:
             list: list of string of the translation
         """    
         if isinstance(text, list):
-            translation = self.translator.translate(text, dest=dest_lang)
-            translation_list = []
-            for item in  translation:
-                translation_list.append(item.text)
-            return translation_list
+            if not circle:
+                    translation = self.translator.translate(text, dest=dest_lang)
+                    translation_list = []
+                    for item in  translation:
+                        translation_list.append(item.text)
+                    return translation_list
+            else:
+                    translation = self.translator.translate([x.text for x in self.translator.translate(text, dest=dest_lang)], dest=orig_lang)
+                    translation_list = []
+                    for item in  translation:
+                        translation_list.append(item.text)
+                    return translation_list
         else:
             raise ValueError(f"{type(text)} provided, supporting type {list}")
