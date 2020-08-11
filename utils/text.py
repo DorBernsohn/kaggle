@@ -5,6 +5,7 @@ import nltk
 import emoji
 import string
 import warnings
+import tensorflow as tf
 import gensim.downloader as api
 from nltk.corpus import wordnet
 from transformers import pipeline
@@ -64,14 +65,12 @@ def create_tfds_dataset(texts, lables):
     ds = tf.data.Dataset.from_tensor_slices((texts, texts))
     return ds
 
-
-
-
 class textAugmentation():
     def __init__(self, gensim_model='glove-twitter-25'):
         print(f"Downloading {gensim_model} model from gensim")
         self.gensim_model = api.load(gensim_model)
         self.transformers_nlp = pipeline('fill-mask')
+        self.translator = Translator()
         print(f"Downloading wordnet from nltk")
         nltk.download("wordnet")
 
@@ -116,29 +115,24 @@ class textAugmentation():
                         synonyms.append(lm.name().lower())
         return synonyms
     
-    @staticmethod
-    def get_translation(text, dest_lang):
+    def get_translation(self, text, dest_lang):
         """translate text using google API, for all the language list visit: https://py-googletrans.readthedocs.io/en/latest/
 
         Args:
-            text (string/list): string or list of strings
+            text (list): list of strings
             dest_lang (satring): string that describe the desired language
 
         Raises:
             ValueError: error if the input is not string or list
 
         Returns:
-            string\list: string or list of string of the translation
+            list: list of string of the translation
         """    
-        translator = Translator()
         if isinstance(text, list):
-            translation = translator.translate(text, dest=dest_lang)
+            translation = self.translator.translate(text, dest=dest_lang)
             translation_list = []
             for item in  translation:
                 translation_list.append(item.text)
             return translation_list
-        elif isinstance(text, str):
-            translation = translator.translate(text, dest=dest_lang)
-            return translation.text
         else:
-            raise ValueError(f"{type(text)} provided, supporting types: {str} or {list}")
+            raise ValueError(f"{type(text)} provided, supporting type {list}")
