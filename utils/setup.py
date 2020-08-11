@@ -1,5 +1,6 @@
  # @author  DBernsohn
 import tensorflow as tf
+from functools import singledispatch, update_wrapper
 
 def set_TPU():
     """config TPU for tensorflow
@@ -18,3 +19,19 @@ def set_TPU():
         strategy = tf.distribute.get_strategy()
 
     print(f"REPLICAS: {strategy.num_replicas_in_sync}")
+
+def methdispatch(func):
+    """Adjustment of @singledispatchmethod usage to a python version lower than 3.8.
+    
+    Args:
+        func (func): function
+
+    Returns:
+        wrapper: function wrapper
+    """    
+    dispatcher = singledispatch(func)
+    def wrapper(*args, **kw):
+        return dispatcher.dispatch(args[1].__class__)(*args, **kw)
+    wrapper.register = dispatcher.register
+    update_wrapper(wrapper, func)
+    return wrapper
