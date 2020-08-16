@@ -53,7 +53,7 @@ def clean_text(text, remove_emojis=True, remove_numbers=True, remove_punc=True, 
             return text
 
 def create_tfds_dataset(texts, lables):
-    """create tensorflow dataset
+    """create tfds dataset
 
     Args:
         texts ([list]): [list of strings/pandas column]
@@ -108,6 +108,14 @@ class textAugmentation():
 
     @staticmethod
     def get_synonym(text):
+        """return the synonym of a word
+
+        Args:
+            text (string): a word
+
+        Returns:
+            list: list of words that are synonym to the word
+        """        
         synonyms = []
         for syn in wordnet.synsets(text):
             for lm in syn.lemmas():
