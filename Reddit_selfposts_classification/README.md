@@ -1,4 +1,4 @@
-# Jigsaw Multilingual Toxic Comment Classification
+# reddit self-post classification
 
 Experiment on few DL models (pre-trained and regular) on the The reddit self-post classification task dataset
 
