@@ -15,7 +15,7 @@ warnings.filterwarnings(action='ignore',category=UserWarning,module='gensim')
 warnings.filterwarnings(action='ignore',category=FutureWarning,module='gensim')
 warnings.filterwarnings(action='ignore',category=FutureWarning,module='transformers')
 
-def clean_text(text, remove_emojis=True, remove_numbers=True, remove_punc=True, remove_url=True, remove_spaces=True):
+def clean_text(text, remove_emojis=True, remove_numbers=True, remove_punc=True, remove_url=True, remove_spaces=True, lower=True):
         """Clean the text
         
         Arguments:
@@ -27,6 +27,7 @@ def clean_text(text, remove_emojis=True, remove_numbers=True, remove_punc=True, 
             remove_punc {bool} -- remove punctuation from our text (default: {True})
             remove_url {bool} -- remove url's from our text (default: {True})
             remove_spaces {bool} -- remove extra spaces from our text (default: {True})
+            lower {bool} -- make the text in lower case
         
         Returns:
             string -- the text after cleaning 
@@ -35,6 +36,8 @@ def clean_text(text, remove_emojis=True, remove_numbers=True, remove_punc=True, 
         if type(text) != str:
             return str(text)
         else:
+            if lower:
+                text = text.lower()
             if remove_spaces:
                 nl_re = re.compile(r'(\n+)')
                 text = re.sub(nl_re, ' ', text)
