@@ -1,7 +1,7 @@
 # Deep_IMDB
 Experiment on few DL models (pre-trained and regular) on the IMDB dataset
 
-| Model | Loss | Accuracy | Test/Train ratio | Trainable Params |
+| Model | Validation Loss | Validation Accuracy | Test/Train ratio | Trainable Params |
 | --- | --- | --- | --- | --- |
 | `BiLSTMs + Self Attention` | 0.2440 | 0.9049 | 0.2 | 6,657,050 | 
 | `gnews-swivel-20dim-with-oov/1` | 7.5760 | 0.5031 | 0.2 | 389,821 |

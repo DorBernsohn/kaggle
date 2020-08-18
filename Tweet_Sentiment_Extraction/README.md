@@ -2,7 +2,7 @@
 
 Experiment on few DL models (pre-trained and regular) on the Tweet Sentiment Extraction task
 
-| Model | Loss | Jaccard | Test/Train ratio | Trainable Params |
+| Model | Validation Loss | Validation Jaccard | Test/Train ratio | Trainable Params |
 | --- | --- | --- | --- | --- |
 | `roberta-base` | 1.6273  | 0.6972 | 0.2 | 124,647,170 |
 
