@@ -1,4 +1,4 @@
-# reddit self-post classification
+# Contradictory, My Dear Watson classification
 
 Experiment on few DL models (pre-trained and regular) on the Contradictory, My Dear Watson task dataset
 
