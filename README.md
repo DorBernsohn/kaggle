@@ -7,6 +7,7 @@ kaggle projects
 | `iMaterialist (Fashion) 2020 at FGVC7` | https://www.kaggle.com/c/imaterialist-fashion-2020-fgvc7 | imaterialist_fashion_2020 |
 | `Tweet Sentiment Extraction` | https://www.kaggle.com/c/tweet-sentiment-extraction | Tweet_Sentiment_Extraction |
 | `Reddit selfposts classification` | https://www.kaggle.com/mswarbrickjones/reddit-selfposts | Reddit_selfposts_classification |
+| `Contradictory, My Dear Watson` | https://www.kaggle.com/c/contradictory-my-dear-watson | Contradictory_classification |
 
 
 <details>
