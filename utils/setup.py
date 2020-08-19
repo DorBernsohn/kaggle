@@ -5,7 +5,7 @@ from functools import singledispatch, update_wrapper
 def set_TPU():
     """config TPU for tensorflow
     Returns:
-        [tf object]: [tf.distribute.TPUStrategy]
+        tf object: tf.distribute.TPUStrategy
     """    
     try:
         tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
