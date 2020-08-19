@@ -5,7 +5,7 @@ from functools import singledispatch, update_wrapper
 def set_TPU():
     """config TPU for tensorflow
     Returns:
-        [tf object]: [tf.distribute.experimental.TPUStrategy]
+        [tf object]: [tf.distribute.TPUStrategy]
     """    
     try:
         tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
@@ -16,7 +16,7 @@ def set_TPU():
     if tpu:
         tf.config.experimental_connect_to_cluster(tpu)
         tf.tpu.experimental.initialize_tpu_system(tpu)
-        strategy = tf.distribute.experimental.TPUStrategy(tpu)
+        strategy = tf.distribute.TPUStrategy(tpu)
     else:
         strategy = tf.distribute.get_strategy()
 
