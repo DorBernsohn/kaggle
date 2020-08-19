@@ -1,14 +1,16 @@
  # @author  DBernsohn
 
+import numpy as np
 import transformers
 from tqdm import tqdm
 import tensorflow as tf
 
+from transformers import TFAutoModel, AutoTokenizer
 from transformers import BertTokenizer, TFBertForSequenceClassification
 from transformers import TFXLNetModel, TFXLNetForSequenceClassification, XLNetTokenizer
 
 class BertInputs():
-    """create a BERT inputs
+    """create a BERT inputs for sentence classification
     """        
     def __init__(self, texts, lables, max_length=512, batch_size=6, bert_model_name='bert-base-uncased'):
         self.max_length = max_length
@@ -96,7 +98,7 @@ class BertInputs():
             return ds_test_encoded
 
 class XLNetInputs():
-    """create a XLNet inputs and build a model
+    """create a XLNet inputs for sentence classification
     """        
     def __init__(self, texts, lables, max_length=512, batch_size=6, xlnet_model_name='xlnet-base-cased'):
         self.max_length = max_length
@@ -175,4 +177,78 @@ class XLNetInputs():
             return ds_train_encoded
         else:
             ds_test_encoded = self.encode_examples(self.texts, self.lables).batch(self.batch_size)
+            return ds_test_encoded
+
+class XLMRobertaInputs():
+    """create a XLMROberta inputs for pair sentence NLI (Entailment, Neutral, Contradiction)
+    """        
+    def __init__(self, texts, lables, max_length=512, batch_size=6, xlmroberta_model_name='jplu/tf-xlm-roberta-large'):
+        self.max_length = max_length
+        self.batch_size = batch_size
+        self.tokenizer = AutoTokenizer.from_pretrained(xlmroberta_model_name)
+        self.texts = texts
+        self.lables = lables
+        
+    def convert_example_to_feature(self, text):
+        """combine step for tokenization, WordPiece vector mapping, adding special tokens as well as truncating reviews longer than the max length
+
+        Args:
+            text (string): text
+
+        Returns:
+            XLNet input: XLNet input for further processing
+        """        
+    
+        return self.tokenizer.batch_encode_plus(text,
+                        max_length = self.max_length, # max length of the text that can go to BERT
+                        pad_to_max_length = True, # add [PAD] tokens
+                        truncation = True
+                    )
+    @staticmethod
+    def map_example_to_dict(input_ids, label):
+        """map to the expected input to TFXLNetForSequenceClassification
+
+        Args:
+            input_ids (list): list of inputs ids
+            attention_masks (list): list of attention masks
+            token_type_ids (list): list of token type ids
+            label (list): list of lables
+
+        Returns:
+            dictionary: dictionary of {"input_ids": input_ids, "attention_mask": attention_mask}
+        """        
+        return {
+            "input_ids": input_ids,
+        }, label
+
+    def encode_examples(self, texts, lables, limit=-1):
+        """prepare list, so that we can build up final TensorFlow dataset from slices
+
+        Args:
+            texts (list): list of texts
+            lables (list): list of lables
+            limit (int, optional): how many samples to take. Defaults to 10.
+
+        Returns:
+            tensorflow dataset object: a tensorflow dataset of bert inputs and lables
+        """        
+        # prepare list, so that we can build up final TensorFlow dataset from slices.
+            
+        xlmroberta_input = self.convert_example_to_feature(texts)
+    
+        input_ids = np.array(xlmroberta_input['input_ids'])
+
+        return tf.data.Dataset.from_tensor_slices((input_ids, lables)).map(self.map_example_to_dict)
+    
+    def process_examples(self, train=None):
+        """encode the dataset
+
+        Returns:
+            tensorflow dataset objext: the text encode to BERT inputs as a tensorflow object
+        """        
+        if train:
+            ds_train_encoded = self.encode_examples(self.texts, self.lables).shuffle(len(self.texts)).repeat().batch(self.batch_size).prefetch(tf.data.experimental.AUTOTUNE)
+            return ds_train_encoded
+        else:
+            ds_test_encoded = self.encode_examples(self.texts, self.lables).batch(self.batch_size).prefetch(tf.data.experimental.AUTOTUNE)
             return ds_test_encoded
