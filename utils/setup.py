@@ -4,7 +4,9 @@ from functools import singledispatch, update_wrapper
 
 def set_TPU():
     """config TPU for tensorflow
-    """     
+    Returns:
+        [tf object]: [tf.distribute.experimental.TPUStrategy]
+    """    
     try:
         tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
         print(f"Running on TPU: {tpu.master()}")
@@ -19,6 +21,7 @@ def set_TPU():
         strategy = tf.distribute.get_strategy()
 
     print(f"REPLICAS: {strategy.num_replicas_in_sync}")
+    return strategy
 
 def methdispatch(func):
     """Adjustment of @singledispatchmethod usage to a python version lower than 3.8.
