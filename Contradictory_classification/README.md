@@ -4,7 +4,7 @@ Experiment on few DL models (pre-trained and regular) on the Contradictory, My D
 
 | Model | Validation Loss | Validation Accuracy | Test/Train ratio | Trainable Params |
 | --- | --- | --- | --- | --- |
-|  |  |  |  |  |
+| `jplu/tf-xlm-roberta-large` | 0.7623 | 0.8276 | 0.1 | 559,923,331 |
 |  |  |  |  |  |
 
 
