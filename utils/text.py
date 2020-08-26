@@ -68,7 +68,61 @@ def create_tfds_dataset(texts, lables):
     ds = tf.data.Dataset.from_tensor_slices((texts, texts))
     return ds
 
-class textAugmentation():
+
+class BERTGradientsScores():
+    def __init__(self, model, tokenizer):
+        self.model = model
+        self.tokenizer = tokenizer
+        self.embedding_matrix = self.model.bert.embeddings.word_embeddings
+
+    def get_grad(self, text):
+        encoded_tokens =  self.tokenizer.encode_plus(text, add_special_tokens=True, return_token_type_ids=True, return_tensors="tf")
+        token_ids = list(encoded_tokens["input_ids"].numpy()[0])
+        vocab_size = self.embedding_matrix.get_shape()[0]
+
+        token_ids_tensor = tf.constant([token_ids], dtype='int32')
+        token_ids_tensor_one_hot = tf.one_hot(token_ids_tensor, vocab_size)
+
+        with tf.GradientTape(watch_accessed_variables=False) as tape:
+            tape.watch(token_ids_tensor_one_hot)
+        
+            # multiply input model embedding matrix; allows us do backprop wrt one hot input
+            inputs_embeds = tf.matmul(token_ids_tensor_one_hot,self.embedding_matrix)  
+
+            # (ii) get prediction
+            scores = self.model({"inputs_embeds": inputs_embeds, "token_type_ids": encoded_tokens["token_type_ids"], "attention_mask": encoded_tokens["attention_mask"] })
+            gradient_non_normalized = tf.norm(
+            tape.gradient([scores], token_ids_tensor_one_hot),axis=2)
+
+            gradient_tensor = (
+                gradient_non_normalized /
+                tf.reduce_max(gradient_non_normalized)
+            )
+            gradients = gradient_tensor[0].numpy().tolist()
+            
+            token_words = self.tokenizer.convert_ids_to_tokens(token_ids) 
+            token_types = list(encoded_tokens["token_type_ids"].numpy()[0])
+        return gradients, token_words, token_types
+
+    @staticmethod
+    def plot_gradients(tokens, token_types, gradients, title):
+        """ Plot  explanations
+        """
+        plt.figure(figsize=(21,3))
+        xvals = [ x + str(i) for i,x in enumerate(tokens)]
+        colors =  [ (0,0,1, c) for c,t in zip(gradients, token_types)]
+        edgecolors = [ "black" if t==0 else (0,0,1, c)  for c,t in zip(gradients, token_types)]
+        # colors =  [  ("r" if t==0 else "b")  for c,t in zip(gradients, token_types) ]
+        plt.tick_params(axis='both', which='minor', labelsize=29)
+        p = plt.bar(xvals, gradients, color=colors, linewidth=1, edgecolor=edgecolors)
+        plt.title(title) 
+        p=plt.xticks(ticks=[i for i in range(len(tokens))], labels=tokens, fontsize=12,rotation=90) 
+
+    def plot(self, text):
+        gradients, token_words, token_types = get_grad(text)
+        self.plot_gradients(token_words, token_types, gradients, text)
+
+class TextAugmentation():
     def __init__(self, gensim_model='glove-twitter-25'):
         print(f"Downloading {gensim_model} model from gensim")
         self.gensim_model = api.load(gensim_model)
