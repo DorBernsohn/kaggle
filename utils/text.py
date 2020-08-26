@@ -8,6 +8,7 @@ import warnings
 import tensorflow as tf
 import gensim.downloader as api
 from nltk.corpus import wordnet
+import matplotlib.pyplot as plt
 from transformers import pipeline
 from googletrans import Translator
 
@@ -119,7 +120,7 @@ class BERTGradientsScores():
         p=plt.xticks(ticks=[i for i in range(len(tokens))], labels=tokens, fontsize=12,rotation=90) 
 
     def plot(self, text):
-        gradients, token_words, token_types = get_grad(text)
+        gradients, token_words, token_types = self.get_grad(text)
         self.plot_gradients(token_words, token_types, gradients, text)
 
 class TextAugmentation():
