@@ -87,7 +87,11 @@ class BERTGradientsScores():
         Returns:
             gradients, token_words, token_types: the gradients, token words and token types
         """        
-        encoded_tokens =  self.tokenizer.encode_plus(text, add_special_tokens=True, return_token_type_ids=True, return_tensors="tf")
+        encoded_tokens =  self.tokenizer.encode_plus(text,\
+                                                     add_special_tokens=True,\
+                                                     return_token_type_ids=True,\
+                                                     return_tensors="tf")
+                                                     
         token_ids = list(encoded_tokens["input_ids"].numpy()[0])
         vocab_size = self.embedding_matrix.get_shape()[0]
 
@@ -100,7 +104,9 @@ class BERTGradientsScores():
             # multiply input model embedding matrix; this allows us do backprop wrt one hot input
             inputs_embeds = tf.matmul(token_ids_tensor_one_hot,self.embedding_matrix)  
 
-            scores = self.model({"inputs_embeds": inputs_embeds, "token_type_ids": encoded_tokens["token_type_ids"], "attention_mask": encoded_tokens["attention_mask"] })
+            scores = self.model({"inputs_embeds": inputs_embeds,\
+                                 "token_type_ids": encoded_tokens["token_type_ids"],\
+                                 "attention_mask": encoded_tokens["attention_mask"] })
             gradient_non_normalized = tf.norm(
             tape.gradient([scores], token_ids_tensor_one_hot),axis=2)
 
