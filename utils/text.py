@@ -71,12 +71,22 @@ def create_tfds_dataset(texts, lables):
 
 
 class BERTGradientsScores():
+    """plot gradient score per token in BERT prediction
+    """    
     def __init__(self, model, tokenizer):
         self.model = model
         self.tokenizer = tokenizer
         self.embedding_matrix = self.model.bert.embeddings.word_embeddings
 
     def get_grad(self, text):
+        """calculate the gradients
+
+        Args:
+            text (string): the text to extract gradients for
+
+        Returns:
+            gradients, token_words, token_types: the gradients, token words and token types
+        """        
         encoded_tokens =  self.tokenizer.encode_plus(text, add_special_tokens=True, return_token_type_ids=True, return_tensors="tf")
         token_ids = list(encoded_tokens["input_ids"].numpy()[0])
         vocab_size = self.embedding_matrix.get_shape()[0]
@@ -87,10 +97,9 @@ class BERTGradientsScores():
         with tf.GradientTape(watch_accessed_variables=False) as tape:
             tape.watch(token_ids_tensor_one_hot)
         
-            # multiply input model embedding matrix; allows us do backprop wrt one hot input
+            # multiply input model embedding matrix; this allows us do backprop wrt one hot input
             inputs_embeds = tf.matmul(token_ids_tensor_one_hot,self.embedding_matrix)  
 
-            # (ii) get prediction
             scores = self.model({"inputs_embeds": inputs_embeds, "token_type_ids": encoded_tokens["token_type_ids"], "attention_mask": encoded_tokens["attention_mask"] })
             gradient_non_normalized = tf.norm(
             tape.gradient([scores], token_ids_tensor_one_hot),axis=2)
@@ -107,8 +116,14 @@ class BERTGradientsScores():
 
     @staticmethod
     def plot_gradients(tokens, token_types, gradients, title):
-        """ Plot  explanations
-        """
+        """plot the gradients score
+
+        Args:
+            tokens (list): token list
+            token_types (list): token types
+            gradients (list): gradients
+            title (string): the title for the plot
+        """        
         plt.figure(figsize=(21,3))
         xvals = [ x + str(i) for i,x in enumerate(tokens)]
         colors =  [ (0,0,1, c) for c,t in zip(gradients, token_types)]
@@ -120,6 +135,11 @@ class BERTGradientsScores():
         p=plt.xticks(ticks=[i for i in range(len(tokens))], labels=tokens, fontsize=12,rotation=90) 
 
     def plot(self, text):
+        """call the get grad and then plot gradients functions
+
+        Args:
+            text (string): the text to analyze
+        """        
         gradients, token_words, token_types = self.get_grad(text)
         self.plot_gradients(token_words, token_types, gradients, text)
 
