@@ -91,7 +91,7 @@ class BERTGradientsScores():
                                                      add_special_tokens=True,\
                                                      return_token_type_ids=True,\
                                                      return_tensors="tf")
-                                                     
+
         token_ids = list(encoded_tokens["input_ids"].numpy()[0])
         vocab_size = self.embedding_matrix.get_shape()[0]
 
@@ -134,7 +134,6 @@ class BERTGradientsScores():
         xvals = [ x + str(i) for i,x in enumerate(tokens)]
         colors =  [ (0,0,1, c) for c,t in zip(gradients, token_types)]
         edgecolors = [ "black" if t==0 else (0,0,1, c)  for c,t in zip(gradients, token_types)]
-        # colors =  [  ("r" if t==0 else "b")  for c,t in zip(gradients, token_types) ]
         plt.tick_params(axis='both', which='minor', labelsize=29)
         p = plt.bar(xvals, gradients, color=colors, linewidth=1, edgecolor=edgecolors)
         plt.title(title) 
