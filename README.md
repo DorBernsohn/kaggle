@@ -8,6 +8,7 @@ kaggle projects
 | `Tweet Sentiment Extraction` | https://www.kaggle.com/c/tweet-sentiment-extraction | Tweet_Sentiment_Extraction |
 | `Reddit selfposts classification` | https://www.kaggle.com/mswarbrickjones/reddit-selfposts | Reddit_selfposts_classification |
 | `Contradictory, My Dear Watson` | https://www.kaggle.com/c/contradictory-my-dear-watson | Contradictory_classification |
+| `google-quest-challenge` | https://www.kaggle.com/c/google-quest-challenge | google_quest_challenge |
 
 
 <details>
