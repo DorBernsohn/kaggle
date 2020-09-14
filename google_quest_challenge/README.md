@@ -24,7 +24,7 @@ Experiment on few DL models (CLS based and siamse) on the google-quest-challenge
         + Build model inputs
         + Build model
         + Training
-    + Model by BERT siamese network
+    + Model by siamese network - BERT
         + Build model inputs
         + Build model
         + Training
