@@ -29,7 +29,7 @@ class BertInputs():
             bert input: bert input for further processing
         """        
     
-        return self.tokenizer.encode_plus(text,
+        return self.tokenizer.batch_encode_plus(text, #encode_plus 14/09/2020
                         add_special_tokens = True, # add [CLS], [SEP]
                         max_length = self.max_length, # max length of the text that can go to BERT
                         pad_to_max_length = True, # add [PAD] tokens
@@ -67,22 +67,12 @@ class BertInputs():
         Returns:
             tensorflow dataset object: a tensorflow dataset of bert inputs and lables
         """        
-        # prepare list, so that we can build up final TensorFlow dataset from slices.
-        input_ids_list = []
-        token_type_ids_list = []
-        attention_mask_list = []
-        label_list = []
-            
-        for text, label in tqdm(zip(texts, lables)):
+        bert_input = self.convert_example_to_feature(texts)
+        input_ids = np.array(bert_input['input_ids'])
+        token_type_ids = np.array(bert_input['token_type_ids'])
+        attention_mask = np.array(bert_input['attention_mask'])
 
-            bert_input = self.convert_example_to_feature(text)
-        
-            input_ids_list.append(bert_input['input_ids'])
-            token_type_ids_list.append(bert_input['token_type_ids'])
-            attention_mask_list.append(bert_input['attention_mask'])
-            label_list.append([label])
-
-        return tf.data.Dataset.from_tensor_slices((input_ids_list, attention_mask_list, token_type_ids_list, label_list)).map(self.map_example_to_dict)
+        return tf.data.Dataset.from_tensor_slices((input_ids, token_type_ids, attention_mask, lables)).map(self.map_example_to_dict)
     
     def process_examples(self, train=None):
         """encode the dataset
@@ -91,10 +81,10 @@ class BertInputs():
             tensorflow dataset objext: the text encode to BERT inputs as a tensorflow object
         """        
         if train:
-            ds_train_encoded = self.encode_examples(self.texts, self.lables).shuffle(10000).batch(self.batch_size)
+            ds_train_encoded = self.encode_examples(self.texts, self.lables).shuffle(10000).repeat().batch(self.batch_size).prefetch(tf.data.experimental.AUTOTUNE)
             return ds_train_encoded
         else:
-            ds_test_encoded = self.encode_examples(self.texts, self.lables).batch(self.batch_size)
+            ds_test_encoded = self.encode_examples(self.texts, self.lables).batch(self.batch_size).prefetch(tf.data.experimental.AUTOTUNE)
             return ds_test_encoded
 
 class XLNetInputs():
