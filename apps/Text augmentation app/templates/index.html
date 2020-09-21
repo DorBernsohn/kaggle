@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Upload File</h1>
+    <hr>
+    <form method="post" enctype="multipart/form-data" class="form-inline">
+        <select class="methodForm" id="methodDropdownSelector" type="text" name="methodDropdown" placeholder="Select A Method">
+            <option disabled selected>Select a method</option>
+            <option id="mostSimilarWords" value="mostSimilarWords">Most Similar Words</option>
+            <option id="synonyms" value="synonyms">Synonyms</option>
+            <option id="translation" value="translation">Translation</option>
+            <option id="MLM" value="MLM">Mask Word Prediction</option>
+       </select>
+        <div class="form-group">
+            <input type="text" name="text">
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Process", class="btn btn-default">
+        </div>
+    </form>
+</div>
+{% endblock %}
