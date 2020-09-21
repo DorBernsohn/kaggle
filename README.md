@@ -31,3 +31,13 @@ kaggle projects
 + vision.py
     + refine_masks: refine the mask to avoid overlapping
     + resize_image: resize the image by the config settigs
+
+
+<details>
+<summary>apps description</summary>
+
++ Text augmentation app
+    + Most Similar Words
+    + Synonyms
+    + Translation
+    + Mask Word Prediction
