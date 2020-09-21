@@ -32,6 +32,7 @@ kaggle projects
     + refine_masks: refine the mask to avoid overlapping
     + resize_image: resize the image by the config settigs
 
+</details>
 
 <details>
 <summary>apps description</summary>
@@ -41,3 +42,5 @@ kaggle projects
     + Synonyms
     + Translation
     + Mask Word Prediction
+
+</details>
