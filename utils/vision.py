@@ -1,15 +1,17 @@
- * @author  Dor Bernsohn
+* @author  Dor Bernsohn
+import cv2
+import numpy as np
 
- def refine_masks(masks, rois):
-     """refine the mask to avoid overlapping
+def refine_masks(masks, rois):
+    """refine the mask to avoid overlapping
 
-     Args:
-         masks (array): array of (IMAGE_SIZE, IMAGE_SIZE, NUM_CLASSES) -> (1024, 1024, 11)
-         rois (array): arrray of (NUM_CLASSES, [y_scale, x_scale, y_scale, x_scale])
+    Args:
+        masks (array): array of (IMAGE_SIZE, IMAGE_SIZE, NUM_CLASSES) -> (1024, 1024, 11)
+        rois (array): arrray of (NUM_CLASSES, [y_scale, x_scale, y_scale, x_scale])
 
-     Returns:
-         (array, array): masks, rois
-     """     
+    Returns:
+        (array, array): masks, rois
+    """     
     areas = np.sum(masks.reshape(-1, masks.shape[-1]), axis=0)
     mask_index = np.argsort(areas)
     union_mask = np.zeros(masks.shape[:-1], dtype=bool)
