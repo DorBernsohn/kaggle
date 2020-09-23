@@ -2,8 +2,12 @@
 
 {% block content %}
 <div class="container">
-    <h1><ins>Predictions for: <mark><b>{{result.word}}</b></mark></ins></h1>
-    <h4><b>{{ result.method }}:</b> {{ result.pred }}</h4>
+    <h1><ins>{{ result.method }} <mark><b>{{result.word}}</b></mark></ins></h1>
+    <ul>
+        {% for i in result.pred.split(',') %}
+          <li><b>{{ i }}</b></li>
+        {% endfor %}
+      </ul>
     <tr class="blank_row">
         <td colspan="3"></td>
     </tr>
