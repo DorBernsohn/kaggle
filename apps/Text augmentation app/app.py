@@ -50,7 +50,7 @@ def index():
             result = {
                         'word': text,
                         'pred': ', '.join(x for x in gt),
-                        "method": "Translation"
+                        "method": "Translation:"
                     }
         elif method == "MLM":
             gmlm = aug.get_MLM(text)
@@ -58,13 +58,13 @@ def index():
             result = {
                         'word': text,
                         'pred': elements,
-                        "method": "Mask word prediction"
+                        "method": "Mask word prediction:"
                     }
         else:
             result = {
                         'word': text,
                         'pred': '',
-                        "method": "Choose a method"
+                        "method": "Choose a method."
                     }
         
         return render_template('show.html', result=result)
