@@ -46,7 +46,9 @@ def index():
                         "method": "Synonyms words:"
                     }
         elif method == "translation":
-            gt = aug.get_translation([text],dest_lang="he", orig_lang="en", circle=True)
+            orig_lang = request.form.get("destLangDropdown")
+            dest_lang = request.form.get("origLangDropdown")
+            gt = aug.get_translation([text],dest_lang=dest_lang, orig_lang=orig_lang, circle=True)
             result = {
                         'word': text,
                         'pred': ', '.join(x for x in gt),

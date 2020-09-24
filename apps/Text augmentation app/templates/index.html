@@ -5,13 +5,40 @@
     <h1>Enter Method and Text</h1>
     <hr>
     <form method="post" enctype="multipart/form-data" class="form-inline">
-        <select class="methodForm" id="methodDropdownSelector" type="text" name="methodDropdown" placeholder="Select A Method">
+        <select class="methodForm" id="methodDropdownSelector"  type="text" name="methodDropdown" placeholder="Select A Method" onchange="myFunction()">
             <option disabled selected>Select a method</option>
             <option id="mostSimilarWords" value="mostSimilarWords">Most Similar Words</option>
             <option id="synonyms" value="synonyms">Synonyms</option>
             <option id="translation" value="translation">Translation</option>
             <option id="MLM" value="MLM">Mask Word Prediction</option>
        </select>
+
+       <script>
+        function myFunction() {
+          var x = document.getElementById("methodDropdownSelector").value;
+          if (x == 'translation'){
+            document.getElementById("destLangDropdownSelector").style.display = "block";
+            document.getElementById("origDropdownSelector").style.display = "block";
+          } else {
+            document.getElementById("destLangDropdownSelector").style.display = "none";
+            document.getElementById("origDropdownSelector").style.display = "none";
+          }
+        }
+        </script>
+       <select class="methodForm" id="destLangDropdownSelector" type="text" name="destLangDropdown" placeholder="Select a Dest Language" style="display:none;">
+           <option disabled selected>Select a Dest Language</option>
+           <option id="en" value="en">English</option>
+           <option id="fr" value="fr">Franch</option>
+           <option id="he" value="he">Hebrew</option>
+           <option id="es" value="es">Spanish</option>
+        </select>
+        <select class="methodForm" id="origDropdownSelector" type="text" name="origLangDropdown" placeholder="Select a Orig Language" style="display:none;">
+            <option disabled selected>Select a Orig Language</option>
+            <option id="en" value="en">English</option>
+            <option id="fr" value="fr">Franch</option>
+            <option id="he" value="he">Hebrew</option>
+            <option id="es" value="es">Spanish</option>
+        </select>
         <div class="form-group">
             <input type="text" name="text">
         </div>
