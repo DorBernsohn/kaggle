@@ -1,1 +1,4 @@
-Run python app.py
+To run the app:
++ Clone
++ Install requirements
++ Run python app.py
