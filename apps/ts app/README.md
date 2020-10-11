@@ -2,7 +2,7 @@
 <details>
 <summary>App demonstration</summary>
 
-+ Choose n stock symbol
++ Choose a stock symbol
 + Choose a model type:
     + Moving Average
     + LSTM
