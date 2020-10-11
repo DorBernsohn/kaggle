@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1><ins>{{ result.method }} <mark><b>{{result.word}}</b></mark></ins></h1>
+    <ul>
+        {% for i in result.pred.split(',') %}
+          <li><b>{{ i }}</b></li>
+        {% endfor %}
+      </ul>
+    <tr class="blank_row">
+        <td colspan="3"></td>
+    </tr>
+    <a href = "{{ url_for('index') }}" class="btn btn-default">Go Back</a>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Enter Method and Text</h1>
+    <hr>
+    <form method="post" enctype="multipart/form-data" class="form-inline">
+        <div class="form-group">
+            <input type="text" name="text" placeholder="Write A Stock Symbol" onchange="myFunction()">
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Process", class="btn btn-default">
+        </div>
+       <script>
+        function myFunction() {
+            document.getElementById("modelType").style.display = "block";
+        }
+        </script>
+       <select class="methodForm" id="modelType" type="text" name="modelType" placeholder="Select a Model Type" style="display:none;">
+           <option disabled selected>Select a Model Type</option>
+           <option id="moovingAverage" value="moovingAverage">Moving Average</option>
+           <option id="lstm" value="lstm">LSTM</option>
+           <option id="bilstm" value="bilstm">BiLSTM</option>
+           <option id="cnn_lstm" value="cnn_lstm">CNN + LSTM</option>
+        </select>
+    </form>
+</div>
+{% endblock %}
