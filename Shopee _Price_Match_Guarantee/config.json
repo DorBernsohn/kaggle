@@ -1,0 +1,4 @@
+{"ephocs": 10,
+ "lr": 1e-4,
+ "batch_size":32,
+ "regularizer_penalty":0}
