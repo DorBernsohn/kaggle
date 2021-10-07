@@ -16,6 +16,6 @@
   + I compared 2 different techniques:
     + Softmax
     + ArcFace
-  The model architecture is as the figure describes:
-  ![Architecture](images/architecture.png?raw=true)
+  + The model architecture is as the figure describes:
+![Architecture](images/architecture.png?raw=true)
 
