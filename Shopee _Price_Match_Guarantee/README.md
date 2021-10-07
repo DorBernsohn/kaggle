@@ -6,8 +6,8 @@
 
 #### The images, with titles, looks like:
 
-![image1](https://github.com/DorBernsohn/kaggle/tree/master/Shopee_Price_Match_Guarantee/images/image1.jpg?raw=true)
-![image2](https://github.com/DorBernsohn/kaggle/tree/master/Shopee_Price_Match_Guarantee/images/image2.jpg?raw=true)
-![image3](https://github.com/DorBernsohn/kaggle/tree/master/Shopee_Price_Match_Guarantee/images/image3.jpg?raw=true)
-![image4](https://github.com/DorBernsohn/kaggle/tree/master/Shopee_Price_Match_Guarantee/images/image4.jpg?raw=true)
+![image1](images/image1.jpg?raw=true)
+![image2](images/image2.jpg?raw=true)
+![image3](images/image3.jpg?raw=true)
+![image4](images/image4.jpg?raw=true)
 
