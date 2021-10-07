@@ -17,5 +17,5 @@
     + Softmax
     + ArcFace
   + The model architecture is as the figure describes:
-![Architecture](images/architecture.png?raw=true)
++ ![Architecture](images/architecture.png?raw=true)
 
