@@ -11,3 +11,11 @@
 ![image3](images/image3.jpg?raw=true)
 ![image4](images/image4.jpg?raw=true)
 
+# Modeling
++ I trained a classifier, for each image and title, to predict which `label_group` the prudc is.
+  I compared 2 different techniques:
+  + Softmax
+  + ArcFace
+  The model architecture is as the figure describes:
+  ![Architecture](images/architecture.jpg?raw=true)
+
