@@ -44,6 +44,7 @@ if __name__ == "__main__":
         trainer = models[model_name](num_labels=data.new_label.nunique())
         history = trainer.train(preprocess.data, vision_model=vision_model)
         print("Model has been Trained")
+        trainer.save(f"{model_name}/")
         with open(f'{model_name}/trainHistoryDict_{model_name}', 'wb') as f:
                 pickle.dump(history.history, f)
         del trainer
