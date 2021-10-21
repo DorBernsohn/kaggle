@@ -11,7 +11,7 @@ from keras.layers import (Input,
 
 from layers import ArcFace, CosFace, SphereFace
 
-with open('/home/users/dbernsohn/projects/tmp/config.json') as f:
+with open('config.json') as f:
   config = json.load(f)
 
 weight_decay = config["weight_decay"]
